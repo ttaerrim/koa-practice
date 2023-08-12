@@ -8,8 +8,9 @@ const router = new Router();
 router.get("/", (ctx) => {
   ctx.body = "home";
 });
-router.get("/about", (ctx) => {
-  ctx.body = "about";
+router.get("/about/:name?", (ctx) => {
+  const { name } = ctx.params;
+  ctx.body = name ? `${name}의 소개` : "소개";
 });
 
 app.use(router.routes()).use(router.allowedMethods());
