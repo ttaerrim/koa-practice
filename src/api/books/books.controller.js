@@ -1,7 +1,16 @@
 const Book = require('models/books');
 
-exports.list = (ctx) => {
-  ctx.body = 'listed';
+exports.list = async (ctx) => {
+  let books;
+
+  try {
+    books = await Book.find().sort({ _id: -1 }).limit(3).exec();
+    // https://mongoosejs.com/docs/queries.html
+  } catch (e) {
+    return ctx.throw(500, e);
+  }
+
+  ctx.body = books;
 };
 
 exports.create = async (ctx) => {
