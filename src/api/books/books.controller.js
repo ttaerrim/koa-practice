@@ -50,8 +50,19 @@ exports.create = async (ctx) => {
   ctx.body = book;
 };
 
-exports.delete = (ctx) => {
-  ctx.body = 'deleted';
+exports.delete = async (ctx) => {
+  const { id } = ctx.params;
+
+  try {
+    await Book.findByIdAndRemove(id);
+  } catch (e) {
+    if (e.name === 'CastError') {
+      ctx.status = 400;
+      return;
+    }
+  }
+
+  ctx.status = 204;
 };
 
 exports.replace = (ctx) => {
