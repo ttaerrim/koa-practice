@@ -115,6 +115,23 @@ exports.replace = async (ctx) => {
   ctx.body = book;
 };
 
-exports.update = (ctx) => {
-  ctx.body = 'updated';
+exports.update = async (ctx) => {
+  const { id } = ctx.params;
+
+  if (!ObjectId.isValid(id)) {
+    ctx.status = 400;
+    return;
+  }
+
+  let book;
+
+  try {
+    book = await Book.findByIdAndUpdate(id, ctx.request.body, {
+      new: true,
+    });
+  } catch (e) {
+    return ctx.throw(500, e);
+  }
+
+  ctx.body = book;
 };
