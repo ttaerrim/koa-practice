@@ -13,6 +13,29 @@ exports.list = async (ctx) => {
   ctx.body = books;
 };
 
+exports.get = async (ctx) => {
+  const { id } = ctx.params;
+  let book;
+
+  try {
+    book = await Book.findById(id).exec();
+  } catch (e) {
+    if (e.name === 'CastError') {
+      ctx.status = 400;
+      return;
+    }
+    return ctx.throw(500, e);
+  }
+
+  if (!book) {
+    ctx.status = 404;
+    ctx.body = { message: 'book not found' };
+    return;
+  }
+
+  ctx.body = book;
+};
+
 exports.create = async (ctx) => {
   const { title, authors, publishedDate, price, tags } = ctx.request.body;
 
